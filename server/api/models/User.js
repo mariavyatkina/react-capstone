@@ -1,0 +1,31 @@
+"use strict";
+exports.__esModule = true;
+var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
+mongoose.connect('mongodb://localhost:27017/capstone');
+var UserSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        "default": ''
+    },
+    password: {
+        type: String,
+        "default": ''
+    },
+    username: {
+        type: String,
+        "default": ''
+    },
+    isDeleted: {
+        type: Boolean,
+        "default": false
+    }
+});
+UserSchema.methods.generateHash = function (password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+UserSchema.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
+module.exports = mongoose.model('User', UserSchema);
+exports["default"] = mongoose;

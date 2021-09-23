@@ -1,0 +1,52 @@
+var express = require('express');
+var mongoose = require('mongoose');
+var cors = require('cors');
+require('dotenv').config();
+var corsOptions = {
+    origin: '*',
+    credentials: true,
+    optionSuccessStatus: 200
+};
+var User = require('./api/models/User');
+var routes = require('./api/routes/v1/signin');
+var DB_NAME = process.env.DB_NAME;
+var DB = process.env.DB;
+var DB_PORT = process.env.DB_PORT;
+var DB_URL = DB + "://localhost:" + DB_PORT + "/" + DB_NAME;
+console.log("DB_URL:" + DB_URL);
+mongoose.connection.on('open', function () { return "MongoDB: Successfully connected to " + DB_URL; });
+mongoose.connection.on('error', function (error) { return "MongoDB: Failed to connected to " + DB_URL + ". Error " + error; });
+console.log('MongoDB: Attempting to connect ...');
+mongoose
+    .connect(DB_URL)["catch"](function (error) { return console.error("MongoDB: Error " + error); });
+var SERVER_PORT = process.env.SERVER_PORT;
+console.log('starting express');
+var app = express();
+/**
+ * Configure express server middleware
+ **/
+// this allows us to parse HTTP POST request bodies 
+app.use(express.json());
+// For development - console each HTTP request to the server
+app.use(function (req, res, next) {
+    console.log(req.method + " " + req.path + " with param " + JSON.stringify(req.params));
+    // For things like POST requests that have a body in the HTTP request, print that too
+    if (req.body) {
+        console.log(JSON.stringify(req.body));
+    }
+    // We need to call next() to tell express that our middleware function here is done and
+    // that express should pass the request on to the next handling function - which will either
+    // be more middleware or our routing code!
+    next();
+});
+/** Express server routes */
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
+/** Mount all our various API routes here */
+app.use('/', routes);
+app.use(cors(corsOptions));
+/** Start express server  */
+app.listen(SERVER_PORT, function () {
+    console.log("Example app listening at http://localhost:" + SERVER_PORT);
+});
