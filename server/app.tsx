@@ -14,20 +14,21 @@ const User = require('./api/models/User');
 
 const routes = require('./api/routes/v1/signin');
 
-const DB_NAME = process.env.DB_NAME;
-const DB = process.env.DB;
-const DB_PORT = process.env.DB_PORT;
-const DB_URL = `${DB}://localhost:${DB_PORT}/${DB_NAME}`
-console.log("DB_URL:" + DB_URL)
 
-mongoose.connection.on('open', () => `MongoDB: Successfully connected to ${DB_URL}`);
-mongoose.connection.on('error', (error: any) => `MongoDB: Failed to connected to ${DB_URL}. Error ${error}`);
+const db_url = process.env.db_url;
 
-console.log('MongoDB: Attempting to connect ...');
-mongoose
-  .connect(DB_URL)
-  // handle error messages after successfully connectiong
-  .catch((error:any) => console.error(`MongoDB: Error ${error}`));
+const connectionParams={
+    useNewUrlParser: true,
+    useUnifiedTopology: true 
+}
+console.log("DB URL: " + db_url);
+mongoose.connect(db_url,connectionParams)
+    .then( () => {
+        console.log('Connected to database now')
+    })
+    .catch( (err: any) => {
+        console.error(`Error connecting to the database. \n${err}`);
+    })
 
 const SERVER_PORT = process.env.SERVER_PORT;
 

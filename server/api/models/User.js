@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
-mongoose.connect('mongodb://localhost:27017/capstone');
+
 var UserSchema = new mongoose.Schema({
     email: {
         type: String,

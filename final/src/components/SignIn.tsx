@@ -1,32 +1,27 @@
-import React, { Component } from 'react';
+import React, {useEffect, useState} from 'react';
+import {Link, Redirect} from 'react-router-dom';
 import 'whatwg-fetch';
 import{
   getFromStorage,
   setInStorage
 } from '../utils/storage';
 import '../styles/Login.css';
+import Account from './Account';
 
 
+export default function SignIn(props: any) {
 
-class SignIn extends React.Component<any, any> {
-    constructor(props:any) {
-        super(props);
+    const[signInError, setSignInError] = useState("");
+    const [signInEmail, setSignInEmail] = useState("");
+    const [signInPassword, setSignInPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [token, setToken] = useState("");
 
-      this.state= {
-        signInError: '',
-        signInEmail: '',
-        signInPassword:'',
-        isLoading: true,
-        token: ''
-      }
-
-      this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(this);
-      this.onTextboxChangeSignPassword = this.onTextboxChangeSignPassword.bind(this);
-      this.onSignIn = this.onSignIn.bind(this);
-
-      this.logout = this.logout.bind(this);
-      }
-      componentDidMount() {
+      
+      useEffect(() =>{
+        if(props.justSignedUp){
+          alert("You have successfully signed up!")
+        }
         const obj = getFromStorage('the_main_app');
         if(obj && obj.token){
           const {token} = obj;
@@ -41,48 +36,34 @@ class SignIn extends React.Component<any, any> {
           .then(res=> res.json())
           .then(json => {
             if(json.success){
-              this.setState({
-                token,
-                isLoading: false
-              })
+              setToken(token);
+              setIsLoading(false);
+             
             }else{
-              this.setState({
-                isLoading:false
-              })
+             setIsLoading(false);
             }
           })
           
       
         }
         else{
-          this.setState({
-            isLoading: false
-          })
+          setIsLoading(false);
         }
-      }
+      }, [])
     
       
 
-      onTextboxChangeSignInEmail(event: any){
-        this.setState({
-          signInEmail: event.target.value
-        })
+      function onTextboxChangeSignInEmail (event: any): void {
+        setSignInEmail(event.target.value);
       }
-      onTextboxChangeSignPassword(event: any){
-        this.setState({
-          signInPassword: event.target.value
-        })
+      function onTextboxChangeSignPassword(event: any){
+        setSignInPassword(event.target.value);
       }
-      onSignIn(){
-        //Grab State
-        const {
-          signInEmail,
-          signInPassword
-        } = this.state;
+
+       function onSignIn(){
         //Post request to backend
-        this.setState({
-          isLoading: true
-        })
+
+        setIsLoading(true);
     
         fetch('http://localhost:9999/api/account/signin', {
           method: 'POST',
@@ -97,69 +78,20 @@ class SignIn extends React.Component<any, any> {
         .then(json => {
             if(json.success){
               setInStorage('the_main_app', {token: json.token})
-              this.setState({
-                signInError: json.message,
-                isLoading:false,
-                signInEmail: '',
-                signInPassword:'',
-                token: json.token,
-    
-              })
+              setSignInError(json.message);
+              setIsLoading(false);
+              setSignInEmail("");
+              setSignInPassword("");
+              setToken(json.token);
             }
             else{
-              this.setState({
-                signInError: json.message,
-                isLoading:false
-              })
+              setSignInError(json.message);
+              setIsLoading(false);
             }
     
         })
     
       }
-
-      logout() {
-        this.setState({
-          isLoading: true,
-
-        });
-        // get the localstorage object
-        const obj = getFromStorage('the_main_app');
-        if (obj && obj.token) {
-          // get token from local storage
-          const { token } = obj;
-    
-          // verify token
-          fetch(`http://localhost:9999/api/account/logout?token=${token}`, {
-            method: 'POST',
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }
-          })
-            .then(res => res.json())
-            .then(json => {
-              if (json.success) {
-                this.setState({
-                  token: "",
-                  isLoading: false
-                });
-              } else {
-                // some error
-                this.setState({
-                  isLoading: false
-                });
-              }
-            });
-        } else {
-          // there is no token
-          this.setState({
-            isLoading: false,
-            token: ""
-          });
-        }
-      }
-      render() {
-        const{isLoading, token, signInError, signInEmail, signInPassword} = this.state;
         if(isLoading){
           return (<div><p>Loading...</p></div>)
         }
@@ -182,7 +114,7 @@ class SignIn extends React.Component<any, any> {
               type="email"
               placeholder="email" 
               value={signInEmail}
-              onChange={this.onTextboxChangeSignInEmail}
+              onChange={onTextboxChangeSignInEmail}
             ></input><br/>
             </div>
             <div className="form-group">
@@ -192,23 +124,19 @@ class SignIn extends React.Component<any, any> {
               type="password" 
               placeholder="password" 
               value={signInPassword}
-              onChange={this.onTextboxChangeSignPassword}
+              onChange={onTextboxChangeSignPassword}
             ></input></div><br/>
-            <button className="btn btn-primary" onClick={this.onSignIn}>Sign In</button>
-            
+            <button className="btn btn-primary m-2" onClick={onSignIn}>Sign In</button>
+           <Link className="text-light m-2 " to="/signup">Sign Up</Link>
+           <Link className="text-light" to="/">Back to Home</Link>
             </form>
           </div>
             </div>
          )
         }
         return (
-          <div>
-           
-           <p>Account</p>
-           <button onClick={this.logout}>Logout</button>
-          </div>
+          <Redirect to="/account"/>
         );
       }
 
-}
-export default SignIn;
+

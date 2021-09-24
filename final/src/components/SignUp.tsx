@@ -1,97 +1,38 @@
-import React, { Component } from 'react';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 import 'whatwg-fetch';
 import{
   getFromStorage,
   setInStorage
 } from '../utils/storage';
 import '../styles/Login.css';
-import { Link } from 'react-router-dom';
+import SignIn from './SignIn';
+import Account from './Account'
 
-class SignUp extends React.Component<any, any> {
-    constructor(props: any) {
-        super(props);
 
-        this.state = {
-            signUpError:'',
-            signUpUsername: '',
-            signUpEmail: '',
-            signUpPassword:'',
-            isLoading: true,
-            token: ''
-        }
-
-        this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(this);
-        this.onTextboxChangeSignUpPassword = this.onTextboxChangeSignUpPassword.bind(this);
-        this.onTextboxChangeSignUpUsername = this.onTextboxChangeSignUpUsername.bind(this);
-        this.logout = this.logout.bind(this);
-        
-        this.onSignUp = this.onSignUp.bind(this);
-    }
-
-    componentDidMount() {
-      const obj = getFromStorage('the_main_app');
-      if(obj && obj.token){
-        const {token} = obj;
-        console.log(`token = ${token}`)
-        // verify the token
-        fetch('http://localhost:9999/api/account/verify?token=' + token,  {
-          method: 'POST',
-          headers : { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-         }})
-        .then(res=> res.json())
-        .then(json => {
-          if(json.success){
-            this.setState({
-              token,
-              isLoading: false
-            })
-          }else{
-            this.setState({
-              isLoading:false
-            })
-          }
-        })
-        
-    
-      }
-      else{
-        this.setState({
-          isLoading: false
-        })
-      }
-    }
+export default function SignUp(props:any){
+  const[signUpError, setSignUpError] = useState("");
+  const [signUpUsername, setSignUpUsername] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState("");
+  const[justSignedUp, setJustSignedUp] = useState(false);
   
-    
-    onTextboxChangeSignUpEmail(event: any){
-        this.setState({
-          signUpEmail: event.target.value
-        })
-      }
-      onTextboxChangeSignUpPassword(event: any){ 
-        this.setState({
-          signUpPassword: event.target.value
-        })
-      }
-      onTextboxChangeSignUpUsername(event: any){
-        this.setState({
-          signUpUsername: event.target.value
-        })
-      }
+  function onTextboxChangeSignUpUsername(event: any){
+    setSignUpUsername(event.target.value);
+  }
+  function onTextboxChangeSignUpEmail (event: any): void {
+    setSignUpEmail(event.target.value);
+  }
+  function onTextboxChangeSignUpPassword(event: any){
+    setSignUpPassword(event.target.value);
+  }
+
       
-      onSignUp(){
-        //Grab State
-        const {
-          signUpUsername,
-          signUpEmail,
-          signUpPassword
-        } = this.state;
+  function onSignUp(){
         //Post request to backend
-        this.setState({
-          isLoading: true
-        })
-    
+        setIsLoading(true);
         fetch('http://localhost:9999/api/account/signup', {
           method: 'POST',
           headers: {
@@ -104,69 +45,55 @@ class SignUp extends React.Component<any, any> {
             }),
         }).then(res=> res.json())
         .then(json => {
-            if(json.success){
-              this.setState({
-                signUpError: json.message,
-                isLoading:false,
-                signUpEmail: '',
-                signUpPassword:'',
-                signUpUsername: ''
-    
-              })
+          if(json.success){
+          setSignUpError(json.message);
+          setIsLoading(false);
+          setSignUpEmail("");
+          setSignUpPassword("");
+          setSignUpUsername("");
+          setJustSignedUp(true);
             }
             else{
-              this.setState({
-                signUpError: json.message,
-                isLoading:false
-              })
+              setSignUpError(json.message);
+              setIsLoading(false);
             }
     
         })
       }
-      logout() {
-        this.setState({
-          isLoading: true,
-
-        });
-        // get the localstorage object
+      useEffect(() =>{
         const obj = getFromStorage('the_main_app');
-        if (obj && obj.token) {
-          // get token from local storage
-          const { token } = obj;
-    
-          // verify token
-          fetch(`http://localhost:9999/api/account/logout?token=${token}`, {
+        if(obj && obj.token){
+          const {token} = obj;
+          console.log(`token = ${token}`)
+          // verify the token
+          fetch('http://localhost:9999/api/account/verify?token=' + token,  {
             method: 'POST',
             headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+           }})
+          .then(res=> res.json())
+          .then(json => {
+            if(json.success){
+              setToken(token);
+              setIsLoading(false);
+             
+            }else{
+             setIsLoading(false);
+            }
           })
-            .then(res => res.json())
-            .then(json => {
-              if (json.success) {
-                this.setState({
-                  token: "",
-                  isLoading: false
-                });
-              } else {
-                // some error
-                this.setState({
-                  isLoading: false
-                });
-              }
-            });
-        } else {
-          // there is no token
-          this.setState({
-            isLoading: false,
-            token: ""
-          });
+          
+      
         }
-      }
-    render(){
-        const{signUpError,  signUpEmail, signUpPassword, signUpUsername, isLoading, token} = this.state;
-
+        else{
+          setIsLoading(false);
+        }
+      }, [])
+        if(justSignedUp){
+          return (
+            <SignIn justSignedUp={justSignedUp}/>
+          );
+        }
         if(isLoading){
             return (<div><p>Loading...</p></div>)
           }
@@ -189,7 +116,7 @@ class SignUp extends React.Component<any, any> {
                   type="text" 
                   placeholder="username" 
                   value={signUpUsername}
-                  onChange={this.onTextboxChangeSignUpUsername}
+                  onChange={onTextboxChangeSignUpUsername}
                 ></input></div><br/>
                 <div className="form-group col-md-6">
                     <label>Email: </label>
@@ -198,7 +125,7 @@ class SignUp extends React.Component<any, any> {
                     type="email" 
                     placeholder="email" 
                     value={signUpEmail}
-                    onChange={this.onTextboxChangeSignUpEmail}
+                    onChange={onTextboxChangeSignUpEmail}
                   ></input>
                 </div><br/>
                 <div className="form-group col-md-6">
@@ -208,22 +135,18 @@ class SignUp extends React.Component<any, any> {
                     type="password" 
                     placeholder="password" 
                     value={signUpPassword}
-                    onChange={this.onTextboxChangeSignUpPassword}
+                    onChange={onTextboxChangeSignUpPassword}
                   ></input><br/>
                 </div>
-                <button className= "btn btn-primary" onClick={this.onSignUp}>Sign Up</button>
+                <button className= "btn btn-primary" onClick={onSignUp}>Sign Up</button>
+                <Link className="text-light m-2 " to="/signin">Sign In</Link>
+                <Link className="text-light" to="/">Back to Home</Link>
                 </form>
               </div>
               </div>
         )}
         return (
-            <div>
-             
-             <p>Account</p>
-             <button onClick={this.logout}>Logout</button>
-            </div>
+            <SignIn justSignedUp={true}/>
           );
     }
-} 
 
-export default SignUp;
