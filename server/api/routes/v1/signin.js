@@ -123,11 +123,32 @@ router.post('/api/account/signin', function (req, res, next) {
         });
     });
 });
+router.get('/api/account/user/:sessionId', function (req, res) {
+    var sessionId = req.params.sessionId;
+    if (!sessionId) {
+        return res.send({
+            success: false,
+            message: "No session id provided"
+        });
+    }
+    UserSession.findById(sessionId)
+        .then(function (userSession) {
+        return res.send({
+            success: true,
+            userId: userSession.userId,
+            message: 'Successful request'
+        });
+    })["catch"](function (err) {
+        return res.send({
+            success: false,
+            message: "Error " + err
+        });
+    });
+});
 // get user info based on id
-router.get("/api/account/:email", function (req, res, next) {
-    var email = req.params.email;
-    console.log("user email: " + email);
-    if (!email) {
+router.get("/api/account/:userId", function (req, res, next) {
+    var userId = req.params.userId;
+    if (!userId) {
         return res.send({
             success: false,
             message: "No user email provided"
@@ -135,7 +156,7 @@ router.get("/api/account/:email", function (req, res, next) {
     }
     User1
         .find({
-        email: email
+        _id: userId
     })
         .then(function (users) {
         console.log(users);
@@ -156,12 +177,11 @@ router.get("/api/account/:email", function (req, res, next) {
     });
 });
 // reset password functionality
-router.put("/api/account/:email", function (req, res, next) {
+router.put("/api/account/:userId", function (req, res, next) {
     var body = req.body;
     var password = body.password, new_password = body.new_password;
-    var email = req.params.email;
-    console.log("user email: " + email);
-    if (!email) {
+    var userId = req.params.userId;
+    if (!userId) {
         return res.send({
             success: false,
             message: "No user email provided"
@@ -180,7 +200,7 @@ router.put("/api/account/:email", function (req, res, next) {
         });
     }
     User1
-        .find({ email: email })
+        .find({ _id: userId })
         .then(function (users) {
         var user = users[0];
         if (!user.validPassword(password)) {
