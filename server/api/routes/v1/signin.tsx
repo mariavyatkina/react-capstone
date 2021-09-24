@@ -136,11 +136,38 @@ const cors1 = require("cors");
         })
 
     })
+    router.get('/api/account/user/:sessionId', (req:any, res:any) => {
+      const sessionId = req.params.sessionId;
+
+      if(!sessionId)
+      {
+        return res.send({
+          success: false,
+          message: "No session id provided"
+        })
+      }
+
+      UserSession.findById(sessionId)
+      .then((userSession:any) => {
+        return res.send({
+          success: true,
+          userId: userSession.userId,
+          message: 'Successful request'
+        })
+      })
+      .catch((err:any) => {
+        return res.send({
+          success: false,
+          message: `Error ${err}`
+        })
+      })
+
+    })
   // get user info based on id
-  router.get("/api/account/:email", (req:any, res:any, next:any) => {
-    const email = req.params.email;
-    console.log("user email: " + email)
-    if(!email){
+  router.get("/api/account/:userId", (req:any, res:any, next:any) => {
+    const userId = req.params.userId;
+
+    if(!userId){
       return res.send({
         success: false,
         message: "No user email provided"
@@ -148,7 +175,7 @@ const cors1 = require("cors");
     }
     User1
     .find({
-      email: email
+      _id: userId
     })
     .then((users: any) => {
       console.log(users)
@@ -173,12 +200,12 @@ const cors1 = require("cors");
   })
 
   // reset password functionality
-  router.put("/api/account/:email", (req:any, res:any, next:any) => {
+  router.put("/api/account/:userId", (req:any, res:any, next:any) => {
     const{body} = req;
     const{password, new_password} = body;
-    const email = req.params.email;
-    console.log("user email: " + email)
-    if(!email){
+    const userId = req.params.userId;
+
+    if(!userId){
       return res.send({
         success: false,
         message: "No user email provided"
@@ -199,7 +226,7 @@ const cors1 = require("cors");
 
     User1
     .find(
-      {email:email}
+      {_id: userId}
     )
     .then((users:any) => {
       const user = users[0];
