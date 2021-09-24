@@ -18,11 +18,11 @@ const UserSchema = new mongoose1.Schema({
       default: false
   }
 });
-UserSchema.methods.generateHash = function(password){
+UserSchema.methods.generateHash = function(password: string){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 }
 
-UserSchema.methods.validPassword = function(password){
+UserSchema.methods.validPassword = function(password: string){
     return bcrypt.compareSync(password, this.password);
 }
 module.exports = mongoose1.model('User', UserSchema);

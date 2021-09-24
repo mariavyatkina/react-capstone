@@ -9,16 +9,18 @@ var corsOptions = {
 };
 var User = require('./api/models/User');
 var routes = require('./api/routes/v1/signin');
-var DB_NAME = process.env.DB_NAME;
-var DB = process.env.DB;
-var DB_PORT = process.env.DB_PORT;
-var DB_URL = DB + "://localhost:" + DB_PORT + "/" + DB_NAME;
-console.log("DB_URL:" + DB_URL);
-mongoose.connection.on('open', function () { return "MongoDB: Successfully connected to " + DB_URL; });
-mongoose.connection.on('error', function (error) { return "MongoDB: Failed to connected to " + DB_URL + ". Error " + error; });
-console.log('MongoDB: Attempting to connect ...');
-mongoose
-    .connect(DB_URL)["catch"](function (error) { return console.error("MongoDB: Error " + error); });
+var db_url = process.env.db_url;
+var connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+};
+console.log("DB URL: " + db_url);
+mongoose.connect(db_url, connectionParams)
+    .then(function () {
+    console.log('Connected to database now');
+})["catch"](function (err) {
+    console.error("Error connecting to the database. \n" + err);
+});
 var SERVER_PORT = process.env.SERVER_PORT;
 console.log('starting express');
 var app = express();

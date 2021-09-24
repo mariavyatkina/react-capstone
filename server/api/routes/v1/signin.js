@@ -3,10 +3,10 @@ var UserSession = require("../../models/UserSession");
 var express1 = require("express");
 var router = express1.Router();
 var cors1 = require("cors");
-require('dotenv').config();
 //const API_ACCOUNT_PATH = process.env.API_ACCOUNT_PATH;
 //console.log(API_ACCOUNT_PATH);
 router.use(cors1());
+//signup request
 router.post('/api/account/signup', function (req, res, next) {
     var body = req.body;
     var username = body.username, password = body.password;
@@ -66,6 +66,7 @@ router.post('/api/account/signup', function (req, res, next) {
         });
     });
 });
+//signin request
 router.post('/api/account/signin', function (req, res, next) {
     var body = req.body;
     var username = body.username, password = body.password;
@@ -122,6 +123,88 @@ router.post('/api/account/signin', function (req, res, next) {
         });
     });
 });
+// get user info based on id
+router.get("/api/account/:email", function (req, res, next) {
+    var email = req.params.email;
+    console.log("user email: " + email);
+    if (!email) {
+        return res.send({
+            success: false,
+            message: "No user email provided"
+        });
+    }
+    User1
+        .find({
+        email: email
+    })
+        .then(function (users) {
+        console.log(users);
+        var user = users[0];
+        return res.send({
+            success: true,
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            isDeleted: user.isDeleted,
+            message: "Successful request"
+        });
+    })["catch"](function (err) {
+        return res.send({
+            success: false,
+            message: "Error: " + err.message
+        });
+    });
+});
+// reset password functionality
+router.put("/api/account/:email", function (req, res, next) {
+    var body = req.body;
+    var password = body.password, new_password = body.new_password;
+    var email = req.params.email;
+    console.log("user email: " + email);
+    if (!email) {
+        return res.send({
+            success: false,
+            message: "No user email provided"
+        });
+    }
+    if (!password) {
+        return res.send({
+            success: false,
+            message: "Current password cannot be empty"
+        });
+    }
+    if (!new_password) {
+        return res.send({
+            success: false,
+            message: "New password cannot be empty"
+        });
+    }
+    User1
+        .find({ email: email })
+        .then(function (users) {
+        var user = users[0];
+        if (!user.validPassword(password)) {
+            return res.send({
+                success: false,
+                message: "Entered current password is invalid"
+            });
+        }
+        else {
+            user.password = user.generateHash(new_password);
+            user.save();
+            return res.send({
+                success: true,
+                message: "The password has been successfully updated"
+            });
+        }
+    })["catch"](function (error) {
+        return res.send({
+            success: false,
+            message: "Error: " + error.message
+        });
+    });
+});
+// verify token request
 router.post("/api/account/verify", function (req, res, next) {
     /**
      * 1. Get the token
@@ -155,6 +238,7 @@ router.post("/api/account/verify", function (req, res, next) {
         }
     });
 });
+// logout request
 router.post("/api/account/logout", function (req, res, next) {
     var query = req.query;
     var token = query.token; //?token=test
@@ -181,7 +265,7 @@ router.post("/api/account/logout", function (req, res, next) {
         // otherwise, everything went fine and dandy
         return res.send({
             success: true,
-            mes: "Good"
+            message: "Good"
         });
     });
 });

@@ -3,7 +3,7 @@ const UserSession = require("../../models/UserSession");
 const express1 = require("express");
 const router = express1.Router();
 const cors1 = require("cors");
-require('dotenv').config();
+
 //const API_ACCOUNT_PATH = process.env.API_ACCOUNT_PATH;
 //console.log(API_ACCOUNT_PATH);
     router.use(cors1());
@@ -136,7 +136,98 @@ require('dotenv').config();
         })
 
     })
+  // get user info based on id
+  router.get("/api/account/:email", (req:any, res:any, next:any) => {
+    const email = req.params.email;
+    console.log("user email: " + email)
+    if(!email){
+      return res.send({
+        success: false,
+        message: "No user email provided"
+      })
+    }
+    User1
+    .find({
+      email: email
+    })
+    .then((users: any) => {
+      console.log(users)
+      const user = users[0];
+      return res.send({
+        success: true,
+        id: user._id, 
+        email: user.email,
+        username: user.username,
+        isDeleted: user.isDeleted,
+        message: "Successful request"  
+      })
+    })
+    .catch((err:any) => {
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
 
+
+  })
+
+  // reset password functionality
+  router.put("/api/account/:email", (req:any, res:any, next:any) => {
+    const{body} = req;
+    const{password, new_password} = body;
+    const email = req.params.email;
+    console.log("user email: " + email)
+    if(!email){
+      return res.send({
+        success: false,
+        message: "No user email provided"
+      })
+    }
+    if(!password){
+      return res.send({
+        success: false,
+        message: "Current password cannot be empty"
+      })
+    }
+    if(!new_password){
+      return res.send({
+        success: false,
+        message: "New password cannot be empty"
+      })
+    }
+
+    User1
+    .find(
+      {email:email}
+    )
+    .then((users:any) => {
+      const user = users[0];
+      if(!user.validPassword(password)){
+        return res.send({
+          success: false,
+          message: "Entered current password is invalid"
+        })
+      }
+      else{
+        user.password = user.generateHash(new_password);
+        user.save();
+        return res.send({
+          success: true,
+          message: "The password has been successfully updated"
+        })
+      }
+    })
+    .catch((error:any) => {
+      return res.send({
+        success: false,
+        message: "Error: " + error.message
+      })
+    })
+
+ 
+
+  })
   // verify token request
   router.post("/api/account/verify", (req:any, res:any, next:any) => {
     /**
