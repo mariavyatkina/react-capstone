@@ -1,0 +1,16 @@
+.account-content{
+    text-align: center;
+    align-items: center;
+}
+.account-content button {
+    padding: 15px 50px;
+}
+
+.browse-movies{
+    width: 80%;
+    margin: 10px auto;
+}
+
+.card{
+    width: 60%;
+}

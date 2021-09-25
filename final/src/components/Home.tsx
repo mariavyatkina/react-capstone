@@ -5,7 +5,7 @@ import{
     setInStorage
   } from '../utils/storage';
 import Account from './Account';
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 
 
 export default function Home(props:any) {
@@ -61,6 +61,7 @@ export default function Home(props:any) {
           else{
               return(
                 <>
+                <Redirect to="/account"/>
                <Account/>
               </>
               )

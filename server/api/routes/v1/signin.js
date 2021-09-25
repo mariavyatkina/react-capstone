@@ -106,6 +106,12 @@ router.post('/api/account/signin', function (req, res, next) {
                 message: 'Error: Invalid'
             });
         }
+        if (user.isDeleted === true) {
+            return res.send({
+                success: false,
+                message: "This user account has been deleted"
+            });
+        }
         var userSession = new UserSession();
         userSession.userId = user._id;
         userSession.save(function (err, doc) {
@@ -221,6 +227,30 @@ router.put("/api/account/:userId", function (req, res, next) {
         return res.send({
             success: false,
             message: "Error: " + error.message
+        });
+    });
+});
+// delete user by userId
+router["delete"]("/api/account/:userId", function (req, res) {
+    var userId = req.params.userId;
+    if (!userId) {
+        return res.send({
+            success: false,
+            message: "Error: no userId was specified"
+        });
+    }
+    User1.findByIdAndUpdate(userId, {
+        $set: { isDeleted: true }
+    })
+        .then(function (user) {
+        return res.send({
+            success: true,
+            message: "User has been updated successfully deleted"
+        });
+    })["catch"](function (err) {
+        return res.send({
+            success: false,
+            message: "Error: " + err.message
         });
     });
 });

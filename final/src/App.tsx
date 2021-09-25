@@ -7,6 +7,7 @@ import Account from './components/Account'
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
+import PasswordReset from './components/PasswordReset';
 import AccountInfo from './components/AccountInfo';
 function App() {
   return (
@@ -21,8 +22,8 @@ function App() {
           <Route path="/signup">
             <SignUp/>
           </Route>
-          <Route path="/account/:email">
-            <AccountInfo/>
+          <Route path="/account/password-reset">
+            <PasswordReset/>
           </Route>
           <Route path="/account">
             <Account/>

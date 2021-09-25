@@ -118,6 +118,12 @@ const cors1 = require("cors");
                     message: 'Error: Invalid'
                 })
             }
+            if(user.isDeleted === true){
+              return res.send({
+                success: false,
+                message: "This user account has been deleted"
+              })
+            }
             const userSession = new UserSession();
             userSession.userId = user._id;
             userSession.save((err: any, doc: any) => {
@@ -223,6 +229,7 @@ const cors1 = require("cors");
         message: "New password cannot be empty"
       })
     }
+    
 
     User1
     .find(
@@ -253,6 +260,34 @@ const cors1 = require("cors");
     })
 
  
+
+  })
+  // delete user by userId
+  router.delete("/api/account/:userId", (req:any, res:any) => {
+    const userId = req.params.userId;
+
+    if(!userId){
+      return res.send({
+        success: false,
+        message: "Error: no userId was specified"
+      })
+    }
+
+    User1.findByIdAndUpdate(userId, {
+      $set: { isDeleted: true }
+    },)
+    .then((user:any) => {
+      return res.send({
+        success: true,
+        message: "User has been updated successfully deleted"
+      })
+    })
+    .catch((err:any) => {
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
 
   })
   // verify token request
