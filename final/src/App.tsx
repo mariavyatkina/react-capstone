@@ -7,15 +7,16 @@ import Account from './components/Account'
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
+import MovieDetails from './components/MovieDetails';
+import Footer from './components/Footer';
 import PasswordReset from './components/PasswordReset';
-import AccountInfo from './components/AccountInfo';
+import BrowseMovies from './components/BrowseMovies';
 function App() {
   return (
     <BrowserRouter>
     <div className="App container-fluid bg-dark">
     <Header/>
-        <div className="container col-6 maindiv pb-6 m-6">
-        <Switch>
+    <Switch>
           <Route path="/signin">
             <SignIn/>
           </Route>
@@ -25,6 +26,12 @@ function App() {
           <Route path="/account/password-reset">
             <PasswordReset/>
           </Route>
+          <Route path="/account/browse-movies/movie-details">
+            <MovieDetails/>
+          </Route>
+          <Route path="/account/browse-movies">
+            <BrowseMovies/>
+          </Route>
           <Route path="/account">
             <Account/>
           </Route>
@@ -32,8 +39,8 @@ function App() {
             <Home/>
           </Route>
         </Switch>
-        </div>
-      </div>
+    <Footer/>
+    </div>
     </BrowserRouter>
   );
 }

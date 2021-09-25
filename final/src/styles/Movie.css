@@ -1,0 +1,13 @@
+.movie-card {
+    flex-direction: row;
+    width: 47%;
+    padding: 0px 0px;
+    margin: 10px;
+    
+  }
+  .card img {
+    width: 50%;
+  }
+.movie-details{
+  width: 70%;
+}

@@ -5,12 +5,14 @@
 .account-content button {
     padding: 15px 50px;
 }
-
+.user-info{
+    width: 50%;
+}
 .browse-movies{
-    width: 80%;
+    width: 100%;
     margin: 10px auto;
 }
 
 .card{
-    width: 60%;
+    width: 100%;
 }

@@ -1,0 +1,7 @@
+.browse-movies{
+    width: 80%;
+}
+
+.movie-list{
+    display: flex;
+}
