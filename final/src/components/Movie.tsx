@@ -46,7 +46,7 @@ export default function Movie(props: any) {
                   <button className="btn btn-warning">Add to WatchList</button>
               </div>
               <div className="col-md-6">
-                  <button className="btn btn-danger">Add to Favorites</button>
+                  <button className="btn btn-danger ">Add to Favorites</button>
               </div>
           </div>
         </div>

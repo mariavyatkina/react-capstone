@@ -8,7 +8,8 @@ var corsOptions = {
     optionSuccessStatus: 200
 };
 var User = require('./api/models/User');
-var routes = require('./api/routes/v1/signin');
+var routes1 = require('./api/routes/v1/signin');
+var routes2 = require('./api/routes/v1/movies');
 var db_url = process.env.db_url;
 var connectionParams = {
     useNewUrlParser: true,
@@ -46,7 +47,8 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 /** Mount all our various API routes here */
-app.use('/', routes);
+app.use('/api/movies', routes2);
+app.use('/', routes1);
 app.use(cors(corsOptions));
 /** Start express server  */
 app.listen(SERVER_PORT, function () {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Redirect, useLocation} from 'react-router'; 
-import Account from './Account'
+import '../styles/PasswordReset.css'
 
 export default function PasswordReset() {
     const location: any = useLocation();
@@ -11,12 +11,18 @@ export default function PasswordReset() {
     const[newPassword, setNewPassword] = useState("");
     const[resetPasswordError, setResetPasswordError] = useState("");
     const[isReset, setIsReset] = useState(false);
+    const[passwordShown, setPasswordShown]= useState(false);
+
     function onTextboxChangePassword(event: any) {
         setPassword(event.target.value);
     }
     function onTextboxChangeNewPassword(event: any) {
         setNewPassword(event.target.value);
     }
+    function toggleShowPassword(e:any){
+        e.preventDefault();
+        setPasswordShown(!passwordShown);
+      }
     function togglePasswordReset(){
         setIsLoading(true);
         fetch(`http://localhost:9999/api/account/${userId}`, {
@@ -56,7 +62,7 @@ export default function PasswordReset() {
           );
     }
     return (
-        <div className="card  bg-secondary mt-3 mb-3">
+        <div className="card password-reset bg-secondary mt-3 mb-3">
             <div className="card-header">
                 Password Reset
             </div>
@@ -70,16 +76,28 @@ export default function PasswordReset() {
             <div className="form-group row">
                     <label  className="col-form-label">Enter Password</label>
                     <div className="col">
-                    <input type="password" className="form-control" id="inputPassword" placeholder="Password" onChange={onTextboxChangePassword}/>
+                    <input  type={passwordShown ? "text" : "password"} className="form-control" id="inputPassword" placeholder="Password" onChange={onTextboxChangePassword}/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label  className="col-form-label">Enter New Password</label>
                     <div className="col">
-                    <input type="password" className="form-control" id="inputNewPassword" placeholder="New Password" onChange={onTextboxChangeNewPassword}/>
+                    <input  type={passwordShown ? "text" : "password"} className="form-control" id="inputNewPassword" placeholder="New Password" onChange={onTextboxChangeNewPassword}/>
                     </div>
                 </div>
-                <button className= "btn btn-primary mt-3" onClick={togglePasswordReset}>Reset Password</button>
+                <div className="form-group row">
+                    <span
+                        className="badge mt-1 show-password-button" 
+                        onClick={toggleShowPassword}>
+                            {(passwordShown)?
+                            ("Hide Password")
+                            :("Show Password")
+                            }
+                    </span>
+              </div>
+                <div className="form-group row ">
+                    <button className= "btn btn-primary mt-3" onClick={togglePasswordReset}>Reset Password</button>
+                </div>
                 </form>
         </div>
         </div>

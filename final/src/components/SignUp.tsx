@@ -18,6 +18,7 @@ export default function SignUp(props:any){
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState("");
   const[justSignedUp, setJustSignedUp] = useState(false);
+  const[passwordShown, setPasswordShown]= useState(false);
   
   function onTextboxChangeSignUpUsername(event: any){
     setSignUpUsername(event.target.value);
@@ -28,7 +29,10 @@ export default function SignUp(props:any){
   function onTextboxChangeSignUpPassword(event: any){
     setSignUpPassword(event.target.value);
   }
-
+  function toggleShowPassword(e:any){
+    e.preventDefault();
+    setPasswordShown(!passwordShown);
+  }
       
   function onSignUp(){
         //Post request to backend
@@ -99,7 +103,7 @@ export default function SignUp(props:any){
           }
         if(!token){
         return(
-          <div className="jumbotron vertical-center ">
+          <div className="jumbotron login col-5 vertical-center ">
              {
                 (signUpError)?(
                   <p>{signUpError}</p>
@@ -132,11 +136,20 @@ export default function SignUp(props:any){
                   <label>Password: </label>
                   <input 
                     className="form-control"
-                    type="password" 
+                    type={passwordShown ? "text" : "password"} 
                     placeholder="password" 
                     value={signUpPassword}
                     onChange={onTextboxChangeSignUpPassword}
-                  ></input><br/>
+                  ></input>
+                  <span
+              className="badge mt-1 mb-1 show-password-button" 
+              onClick={toggleShowPassword}>
+                {(passwordShown)?
+                ("Hide Password")
+                :("Show Password")
+                }
+              </span>
+                  <br/>  
                 </div>
                 <button className= "btn btn-primary" onClick={onSignUp}>Sign Up</button>
                 <Link className="text-light m-2 " to="/signin">Sign In</Link>

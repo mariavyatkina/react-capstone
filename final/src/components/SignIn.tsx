@@ -16,6 +16,7 @@ export default function SignIn(props: any) {
     const [signInPassword, setSignInPassword] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [token, setToken] = useState("");
+    const[passwordShown, setPasswordShown]= useState(false);
 
       
       useEffect(() =>{
@@ -59,7 +60,10 @@ export default function SignIn(props: any) {
       function onTextboxChangeSignPassword(event: any){
         setSignInPassword(event.target.value);
       }
-
+      function toggleShowPassword(e:any){
+        e.preventDefault();
+        setPasswordShown(!passwordShown);
+      }
        function onSignIn(){
         //Post request to backend
 
@@ -97,7 +101,7 @@ export default function SignIn(props: any) {
         }
         if(!token){
         return(
-          <div className="jumbotron vertical-center">
+          <div className="jumbotron login vertical-center horizontal-center col-5">
             {
             (signInError)?(
               <p>{signInError}</p>
@@ -121,12 +125,21 @@ export default function SignIn(props: any) {
             <label>Password:</label>
             <input 
               className="form-control"
-              type="password" 
+              type={passwordShown ? "text" : "password"}
               placeholder="password" 
               value={signInPassword}
               onChange={onTextboxChangeSignPassword}
-            ></input></div><br/>
-            <button className="btn btn-primary m-2" onClick={onSignIn}>Sign In</button>
+            ></input>
+             <span
+              className="badge mt-1 show-password-button" 
+              onClick={toggleShowPassword}>
+                {(passwordShown)?
+                ("Hide Password")
+                :("Show Password")
+                }
+              </span>
+            </div><br/>
+            <button className="btn btn-primary" onClick={onSignIn}>Sign In</button>
            <Link className="text-light m-2 " to="/signup">Sign Up</Link>
            <Link className="text-light" to="/">Back to Home</Link>
             </form>

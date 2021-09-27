@@ -370,5 +370,21 @@ const cors1 = require("cors");
     );
   });
 
+  router.post('api/movies/add-movie', (req:any, res:any) => {
+    const {body} = req;
+    const {imdbID, userId} = body;
+
+    if(!imdbID) {
+        return res.send({
+            success: false,
+            message: "Error: No imdbID was provided"
+        })
+    }
+    if(!userId) {
+        return res.send({
+            success: false,
+            message: "Error: No userId was provided"
+        })
+    }})
 
 module.exports = router;

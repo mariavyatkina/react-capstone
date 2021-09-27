@@ -171,7 +171,7 @@ export default function Account(props:any) {
                   <AccountInfo user={user} logout={logout} deleteUser={deleteUser}/>
                 </div>
                 <div className="col-md-6">
-                  <Link to="account/browse-movies"><div className="container-fluid text-center browse-movies"><h1 className="display-3">Browse Movies  </h1></div></Link>
+                  <Link to="account/browse-movies"><div className="container-fluid text-center browse-movies-banner"><h1 className="display-3">Browse Movies  </h1></div></Link>
                   <div>
                     <button className="btn btn-warning m-3">  Watchlist </button>
                     <button className="btn btn-danger m-3 ">Favorites </button>

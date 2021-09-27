@@ -1,6 +1,7 @@
 .account-content{
     text-align: center;
     align-items: center;
+
 }
 .account-content button {
     padding: 15px 50px;
@@ -8,7 +9,10 @@
 .user-info{
     width: 50%;
 }
-.browse-movies{
+.row{
+    margin: 0 auto;
+}
+.browse-movies-banner{
     width: 100%;
     margin: 10px auto;
 }

@@ -12,7 +12,8 @@ const corsOptions ={
 
 const User = require('./api/models/User');
 
-const routes = require('./api/routes/v1/signin');
+const routes1 = require('./api/routes/v1/signin');
+const routes2 = require('./api/routes/v1/movies');
 
 
 const db_url = process.env.db_url;
@@ -62,7 +63,9 @@ app.use((req:any, res:any, next:any) => {
   })
 
   /** Mount all our various API routes here */
-  app.use('/', routes);
+  app.use('/api/movies', routes2);
+  app.use('/', routes1);
+  
   app.use(cors(corsOptions)) 
   /** Start express server  */
   app.listen(SERVER_PORT, () => {

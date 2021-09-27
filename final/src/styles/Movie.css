@@ -8,6 +8,8 @@
   .card img {
     width: 50%;
   }
-.movie-details{
-  width: 70%;
-}
+  .movie-details{
+    width: 70%;
+    margin: 0 auto;
+    padding: 5px;
+  }

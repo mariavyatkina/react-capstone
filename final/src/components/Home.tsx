@@ -47,7 +47,13 @@ export default function Home(props:any) {
               return(
                 <>
                 
-                <div>
+                <div className="containe-fluid maindiv text-center">
+                  <div className="container home-content">
+                    <h1 className="display-5">Welcome to Movie App</h1>
+                    <p className="col-6 description-home">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque quasi aut mollitia autem cum cumque voluptas atque odit sint tempore unde, dolore ipsum commodi vero doloremque adipisci non exercitationem eos.
+                    </p>
+                  </div>
                    <button className="btn btn-primary">
                      <Link className="text-white" to="/signin">Sign In</Link>
                    </button>

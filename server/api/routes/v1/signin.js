@@ -319,4 +319,20 @@ router.post("/api/account/logout", function (req, res, next) {
         });
     });
 });
+router.post('api/movies/add-movie', function (req, res) {
+    var body = req.body;
+    var imdbID = body.imdbID, userId = body.userId;
+    if (!imdbID) {
+        return res.send({
+            success: false,
+            message: "Error: No imdbID was provided"
+        });
+    }
+    if (!userId) {
+        return res.send({
+            success: false,
+            message: "Error: No userId was provided"
+        });
+    }
+});
 module.exports = router;
