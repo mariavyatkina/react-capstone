@@ -7,6 +7,7 @@ import Account from './components/Account'
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
+import SelectedMovieList from './components/SelectedMovieList';
 import MovieDetails from './components/MovieDetails';
 import Footer from './components/Footer';
 import PasswordReset from './components/PasswordReset';
@@ -31,6 +32,12 @@ function App() {
           </Route>
           <Route path="/account/browse-movies">
             <BrowseMovies/>
+          </Route>
+          <Route path="/account/favorites">
+            <SelectedMovieList/>
+          </Route>
+          <Route path="/account/watchlist">
+          <SelectedMovieList/>
           </Route>
           <Route path="/account">
             <Account/>

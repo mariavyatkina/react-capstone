@@ -4,7 +4,7 @@ const MovieSchema = new mongoose6.Schema({
         type: String,
         default: "",
         required: true,
-        unique: true
+       
     },
     userId: {
         type: String,

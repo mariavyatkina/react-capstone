@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Image} from 'react-bootstrap';
 import "../styles/Home.css"
 import{
     getFromStorage,
@@ -18,7 +19,7 @@ export default function Home(props:any) {
         const {token} = obj;
         console.log(`token = ${token}`)
         // verify the token
-        fetch('http://localhost:9999/api/account/verify?token=' + token,  {
+        fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/verify?token=` + token,  {
           method: 'POST',
           headers : { 
           'Content-Type': 'application/json',
@@ -44,22 +45,18 @@ export default function Home(props:any) {
             return (<div><p>Loading...</p></div>)
           }
           if(!token){
+            console.log("url: "+ process.env.REACT_APP_IMG_URL_1)
               return(
                 <>
                 
-                <div className="containe-fluid maindiv text-center">
-                  <div className="container home-content">
-                    <h1 className="display-5">Welcome to Movie App</h1>
-                    <p className="col-6 description-home">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque quasi aut mollitia autem cum cumque voluptas atque odit sint tempore unde, dolore ipsum commodi vero doloremque adipisci non exercitationem eos.
-                    </p>
+                <div className="container-fluid maindiv text-center">
+                <div className="container home-content">
+                    <h1 className="display-4">Welcome to Movie App</h1>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eligendi repellat alias distinctio, sed labore fugiat amet iusto suscipit. Numquam eaque doloribus, soluta atque ipsa dicta incidunt eos qui odio quas?</p>
+                     <Link className="btn btn-primary m-2 p-3" to="/signin">Sign In</Link>
+                     <Link className="btn btn-success m-2 p-3" to="/signup">Sign Up</Link>
                   </div>
-                   <button className="btn btn-primary">
-                     <Link className="text-white" to="/signin">Sign In</Link>
-                   </button>
-                   <button className="btn btn-success m-2">
-                     <Link className="text-white" to="/signup">Sign Up</Link>
-                   </button>
+                 
               </div>
               </>
               )

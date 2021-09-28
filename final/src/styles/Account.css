@@ -6,17 +6,79 @@
 .account-content button {
     padding: 15px 50px;
 }
+
 .user-info{
-    width: 50%;
+    width: 100%;
+    box-shadow: 5px 5px rgb(78, 74, 74);
+    animation-name: decrease-info;
+    animation-duration: 1s;
 }
+.user-info:hover{
+    width: 110%;
+    animation-name: increase-info;
+    animation-duration: 1s;
+}
+.buttons-account{
+    margin: 0px auto;
+}
+
+
+
 .row{
     margin: 0 auto;
 }
 .browse-movies-banner{
-    width: 100%;
+    width: 50%;
     margin: 10px auto;
+    border: 2px solid white;
+    padding: 10px;
+    margin: 20px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-40%,-90%);
+    animation-name: decrease-banner;
+    animation-duration: 1s;
+}
+.browse-movies-banner:hover{
+    color: black;
+    background-color:white;
+    width: 60%;
+    animation-name: increase-banner;
+    animation-duration: 1s;
 }
 
 .card{
     width: 100%;
+}
+@keyframes increase-banner{
+    from{
+        width: 50%;
+    }
+    to{
+        width: 60%;
+    }
+}
+@keyframes decrease-banner{
+    from{
+        width: 60%;
+    }
+    to{
+        width: 50%;
+    }
+}
+@keyframes increase-info {
+    from {
+        width: 100%;
+    }
+    to{
+        width: 110%;
+    }
+}
+@keyframes decrease-info {
+    from {
+        width: 110%;
+    }
+    to{
+        width: 100%;
+    }
 }

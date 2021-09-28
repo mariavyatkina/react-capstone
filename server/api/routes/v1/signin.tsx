@@ -1,15 +1,16 @@
 const User1 = require("../../models/User");
 const UserSession = require("../../models/UserSession");
+const Movie = require("../../models/Movie");
 const express1 = require("express");
 const router = express1.Router();
 const cors1 = require("cors");
 
 //const API_ACCOUNT_PATH = process.env.API_ACCOUNT_PATH;
 //console.log(API_ACCOUNT_PATH);
-    router.use(cors1());
+  router.use(cors1());
 
     //signup request
-    router.post('/api/account/signup', (req: any, res: any, next: any) => {
+  router.post('/api/account/signup', (req: any, res: any, next: any) => {
         const {body} = req;
         const{username, password} = body;
         let {email} = body;
@@ -76,7 +77,7 @@ const cors1 = require("cors");
     })
 
     //signin request
-    router.post('/api/account/signin', (req: any, res: any, next: any) => {
+  router.post('/api/account/signin', (req: any, res: any, next: any) => {
         const {body} = req;
         const{username, password} = body;
         let {email} = body;
@@ -142,7 +143,7 @@ const cors1 = require("cors");
         })
 
     })
-    router.get('/api/account/user/:sessionId', (req:any, res:any) => {
+  router.get('/api/account/user/:sessionId', (req:any, res:any) => {
       const sessionId = req.params.sessionId;
 
       if(!sessionId)
@@ -369,10 +370,10 @@ const cors1 = require("cors");
       }
     );
   });
-
-  router.post('api/movies/add-movie', (req:any, res:any) => {
-    const {body} = req;
-    const {imdbID, userId} = body;
+// adds movie to the database
+  router.post('/api/movies/:userId/add-movie/:imdbID', (req:any, res:any) => {
+    const userId = req.params.userId;
+    const imdbID = req.params.imdbID;
 
     if(!imdbID) {
         return res.send({
@@ -385,6 +386,244 @@ const cors1 = require("cors");
             success: false,
             message: "Error: No userId was provided"
         })
-    }})
+    }
+
+    Movie.find({
+        imdbID: imdbID,
+        userId: userId,
+    }, (err: any, previuosMovies: any) => {
+        if(err){
+            return res.send({
+                success: false,
+                message: "Error: Server error"
+            })
+        }
+        else if(previuosMovies.length > 0){
+            return res.send({
+                success: true,
+                message: "Movie already exists in Favorites/Watchlist"
+            })
+        }
+
+        const newMovie = new Movie();
+        newMovie.imdbID = imdbID;
+        newMovie.userId = userId;
+        newMovie.save((err:any, movie:typeof Movie) =>{
+            if(err){
+                return res.send({
+                    success: false,
+                    message: "Second Error: Server Error"
+                })
+            }
+            return res.send({
+                success: true,
+                 message: "Movie successfully added"
+                })
+        })
+    })
+
+  })
+// updates isFavorited property of the movie
+  router.put("/api/movies/:userId/set-favorites/:imdbID", (req:any, res:any, next:any) => {
+    const{body} = req;
+   
+    const userId = req.params.userId;
+    const imdbID = req.params.imdbID;
+
+    if(!userId){
+      return res.send({
+        success: false,
+        message: "Error: no userId was specified"
+      })
+    }
+    if(!imdbID){
+      return res.send({
+        success: false,
+        message: "Error: no imdbID was specified"
+      })
+    }
+
+    Movie.findOne({
+      userId: userId,
+      imdbID: imdbID
+    })
+    .then((movie:any) => {
+      movie.isFavorited = !movie.isFavorited;
+      movie.save();
+      const successMessage = 
+          (movie.isFavorited)
+          ?("Movie has been favorited")
+          :("Movie has been removed from favorites");
+      return res.send({
+        success: true,
+        message: successMessage
+      })
+    })
+    .catch((err:any) => {
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
+  })
+  router.get("/api/movies/:userId/:imdbID", (req:any, res:any, next:any) => {
+    const{body} = req;
+   
+    const userId = req.params.userId;
+    const imdbID = req.params.imdbID;
+
+    if(!userId){
+      return res.send({
+        success: false,
+        message: "Error: no userId was specified"
+      })
+    }
+    if(!imdbID){
+      return res.send({
+        success: false,
+        message: "Error: no imdbID was specified"
+      })
+    }
+
+    Movie.findOne({
+      userId: userId,
+      imdbID: imdbID
+    })
+    .then((movie:any) => {
+      return res.send({
+        success: true,
+        isFavorited: movie.isFavorited,
+        isOnWatchlist: movie.isOnWatchlist,
+        message: "Request completed"
+      })
+    })
+    .catch((err:any) => {
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
+  })
+// updates isOnWatchlist property of the movie
+  router.put("/api/movies/:userId/set-watchlist/:imdbID", (req:any, res:any, next:any) => {
+    const{body} = req;
+   
+    const userId = req.params.userId;
+    const imdbID = req.params.imdbID;
+
+    if(!userId){
+      return res.send({
+        success: false,
+        message: "Error: no userId was specified"
+      })
+    }
+    if(!imdbID){
+      return res.send({
+        success: false,
+        message: "Error: no imdbID was specified"
+      })
+    }
+
+    Movie.findOne({
+      userId: userId,
+      imdbID: imdbID
+    })
+    .then((movie:any) => {
+      movie.isOnWatchlist = !movie.isOnWatchlist;
+      movie.save();
+      const successMessage = 
+          (movie.isOnWatchlist)
+          ?("Movie has been added to watchlist")
+          :("Movie has been removed from the watchlist");
+      return res.send({
+        success: true,
+        message: successMessage
+      })
+    })
+    .catch((err:any) => {
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
+  })
+  router.get("/api/account/favorites/:userId", (req:any, res:any) => {
+      const userId = req.params.userId;
+
+      if(!userId) {
+        return res.send({
+          success: false,
+          message: "Error: no userId was specified"
+        })
+      }
+
+      Movie.find(
+        {
+          userId: userId,
+          isFavorited: true
+        }
+      )
+      .then((movies:any) => {
+        if(movies.length < 1){
+          return res.send({
+            success: false,
+            message: "No movies have been favorited"
+          })
+        }
+        const imdbs = movies.map((movie:any) => {
+          return movie.imdbID
+        })
+        return res.send({
+          imdbs: imdbs,
+          message: "Completed request",
+          success: true
+        })
+      })
+      .catch((err:any) =>{
+        return res.send({
+          success: false,
+          message: `Error: ${err.message}`
+        })
+      })
+  })
+  router.get("/api/account/watchlist/:userId", (req:any, res:any) => {
+    const userId = req.params.userId;
+
+    if(!userId) {
+      return res.send({
+        success: false,
+        message: "Error: no userId was specified"
+      })
+    }
+
+    Movie.find(
+      {
+        userId: userId,
+        isOnWatchlist: true
+      }
+    )
+    .then((movies:any) => {
+      if(movies.length < 1){
+        return res.send({
+          success: false,
+          message: "No movies have been added to watchlist"
+        })
+      }
+      const imdbs = movies.map((movie:any) => {
+        return movie.imdbID
+      })
+      return res.send({
+        imdbs:imdbs,
+        message: "Completed request",
+        success: true
+      })
+    })
+    .catch((err:any) =>{
+      return res.send({
+        success: false,
+        message: `Error: ${err.message}`
+      })
+    })
+})
 
 module.exports = router;

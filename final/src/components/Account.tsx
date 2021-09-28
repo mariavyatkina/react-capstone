@@ -9,6 +9,8 @@ import{
 import {Link, Redirect} from 'react-router-dom'
 import AccountInfo from './AccountInfo';
 import '../styles/Account.css';
+import Axios from 'axios';
+import SelectedMovieList from './SelectedMovieList';
 
 export default function Account(props:any) {
     const[email, setEmail] = useState("");
@@ -17,6 +19,7 @@ export default function Account(props:any) {
     const [userId, setUserId] = useState("");
     const [token, setToken] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+  
 
     useEffect(() => {
       const obj = getFromStorage('the_main_app');
@@ -24,7 +27,7 @@ export default function Account(props:any) {
         const {token} = obj;
         console.log(`token = ${token}`)
         // verify the token
-        fetch('http://localhost:9999/api/account/verify?token=' + token,  {
+        fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/verify?token=` + token,  {
           method: 'POST',
           headers : { 
           'Content-Type': 'application/json',
@@ -36,7 +39,7 @@ export default function Account(props:any) {
             setToken(token);
           }
       })
-      fetch(`http://localhost:9999/api/account/user/${token}`, {
+      fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/user/${token}`, {
           method: 'GET',
           headers : { 
               'Content-Type': 'application/json',
@@ -53,7 +56,7 @@ export default function Account(props:any) {
       .catch(err => {
           console.log("error: " + err)
       })
-      fetch(`http://localhost:9999/api/account/${userId}`, {
+      fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/${userId}`, {
           method: 'GET',
           headers : { 
               'Content-Type': 'application/json',
@@ -75,12 +78,12 @@ export default function Account(props:any) {
       .catch(err => {
           console.log(`Error: ${err.message}`);
       })
-      }
+
+        }
       else{
         setIsLoading(false);
       }
-      
-      })
+      },[userId, token])
     function logout() {
         setIsLoading(true);
         // get the localstorage object
@@ -90,7 +93,7 @@ export default function Account(props:any) {
           const { token } = obj;
     
           // verify token
-          fetch(`http://localhost:9999/api/account/logout?token=${token}`, {
+          fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/logout?token=${token}`, {
             method: 'POST',
             headers : { 
               'Content-Type': 'application/json',
@@ -123,7 +126,7 @@ export default function Account(props:any) {
     function deleteUser(){
       setIsLoading(true);
 
-      fetch(`http://localhost:9999/api/account/${userId}`, {
+      fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/${userId}`, {
         method: 'DELETE',
         headers : { 
           'Content-Type': 'application/json',
@@ -154,7 +157,7 @@ export default function Account(props:any) {
       isDeleted: isDeleted,
       userId: userId
     }
-        if(!token) {
+        if(!token || !userId) {
             return(
               <>
               <Redirect to="/"/>
@@ -164,17 +167,18 @@ export default function Account(props:any) {
         }
         else{
             return(
+              
               <div className="container-fluid account mt-5 ml-5">
-              <h4><strong> Hi, <strong className="text-danger">{user.username}</strong></strong></h4>
+              <h4 className="greeting"><strong> Hi, <strong className="text-danger">{user.username}</strong></strong></h4>
               <div className="row account-content text-center ">
               <div className="col-md-3">
                   <AccountInfo user={user} logout={logout} deleteUser={deleteUser}/>
                 </div>
-                <div className="col-md-6">
-                  <Link to="account/browse-movies"><div className="container-fluid text-center browse-movies-banner"><h1 className="display-3">Browse Movies  </h1></div></Link>
-                  <div>
-                    <button className="btn btn-warning m-3">  Watchlist </button>
-                    <button className="btn btn-danger m-3 ">Favorites </button>
+                <div className="col-md-6 account-browse">
+                  <Link to="account/browse-movies"><div className="container-fluid text-center browse-movies-banner"><h1 className="display-3 ">Browse Movies  </h1></div></Link>
+                  <div className="buttons-account mt-5">
+                    <Link className="btn btn-danger button-account" to={{pathname:"/account/favorites", state:{userId: userId, category: "Favorites"}}} style={{fontSize:"25px", margin: "20px",padding: "15px 50px"}}>Favorites</Link>
+                    <Link className="btn btn-warning button-account" to={{pathname:"/account/watchlist", state:{userId: userId, category: "Watchlist"}}} style={{fontSize:"25px", margin: "20px",padding: "15px 50px"}}>Watchlist</Link>
                   </div>
                 </div>
                 

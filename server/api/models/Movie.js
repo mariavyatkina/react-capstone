@@ -3,8 +3,7 @@ var MovieSchema = new mongoose6.Schema({
     imdbID: {
         type: String,
         "default": "",
-        required: true,
-        unique: true
+        required: true
     },
     userId: {
         type: String,

@@ -37,7 +37,7 @@ export default function SignUp(props:any){
   function onSignUp(){
         //Post request to backend
         setIsLoading(true);
-        fetch('http://localhost:9999/api/account/signup', {
+        fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ export default function SignUp(props:any){
           const {token} = obj;
           console.log(`token = ${token}`)
           // verify the token
-          fetch('http://localhost:9999/api/account/verify?token=' + token,  {
+          fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/verify?token=` + token,  {
             method: 'POST',
             headers : { 
             'Content-Type': 'application/json',
@@ -103,6 +103,7 @@ export default function SignUp(props:any){
           }
         if(!token){
         return(
+          <div className="container-fluid maindiv">
           <div className="jumbotron login col-5 vertical-center ">
              {
                 (signUpError)?(
@@ -110,7 +111,7 @@ export default function SignUp(props:any){
                 )
                 : null
               }
-              <div className="container p-6">
+              <div className="container login-container p-6">
                 <h3>Sign Up</h3>
                 <form className="form mt-2">
                   <div className="form-group col-md-6">
@@ -157,6 +158,8 @@ export default function SignUp(props:any){
                 </form>
               </div>
               </div>
+              </div>
+            
         )}
         return (
             <SignIn justSignedUp={true}/>

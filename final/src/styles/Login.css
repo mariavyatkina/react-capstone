@@ -7,7 +7,16 @@
     margin-top: 30px;
     background-color:#2e2e38;
     margin: 0 auto;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 50%;
+    animation-name: container-appearance;
+    animation-duration: 1s;
+}
 
+.login-container{
+    padding: 30px;
 }
 h3, label{
     color: white;
@@ -19,4 +28,13 @@ button {
 .form-group{
     width: 40%;
  
+}
+
+@keyframes container-appearance{
+    from{
+        transform: translate(-50%,-70%);
+    }
+    to{
+        transform: translate(-50%,-50%);
+    }
 }

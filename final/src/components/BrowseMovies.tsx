@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import MovieList from './MovieList';
 import Axios from 'axios';
 import '../styles/BrowseMovies.css'
+import BackToAccount from './BackToAccount';
 export default function BrowseMovies() {
     
     const [movieTitle, setMovieTitle] = useState("");
@@ -16,7 +17,7 @@ export default function BrowseMovies() {
 
     function toggleSearchMovies(){
         setIsLoading(true);
-        Axios.get(`https://www.omdbapi.com/?s=${movieTitle}&apikey=${process.env.REACT_APP_API_KEY}`)
+        Axios.get(`${process.env.REACT_APP_OMDB_URL}/?s=${movieTitle}&apikey=${process.env.REACT_APP_API_KEY}`)
         .then((response) =>{
         console.log(response.data);
         if(response.data.Response === "True"){ 
@@ -38,9 +39,7 @@ export default function BrowseMovies() {
     }
     return (
         <div className="browse-movies">
-            <nav>
-                <div><Link className="btn btn-success m-2" to="/account">MyAccount</Link></div>
-            </nav>
+            <BackToAccount/>
            <div>
             <div className="input-group m-2">
                  <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search"

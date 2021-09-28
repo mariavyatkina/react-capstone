@@ -2,9 +2,32 @@ div{
     color: white;
 
 }
-.description-home{
-    margin: 20px auto;
+.home-content{
+ position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-30%);
+  height: 200px;
+  width: 50%;
+  animation-name: container-appearance;
+  animation-duration: 1s;
 }
 .maindiv{
     background-color:#2e2e38;
+}
+
+.maindiv{
+    position: relative;
+    min-height: 90vh;
+    margin: 0px auto;
+    background-image: url(https://images.unsplash.com/photo-1622819584099-e04ccb14e8a7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1700&q=80)
+    
+}
+
+@keyframes container-appearance{
+    from{
+        transform: translate(-50%,-50%);
+    }
+    to{
+        transform: translate(-50%,-30%);
+    }
 }

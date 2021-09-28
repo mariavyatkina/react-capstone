@@ -25,7 +25,7 @@ export default function PasswordReset() {
       }
     function togglePasswordReset(){
         setIsLoading(true);
-        fetch(`http://localhost:9999/api/account/${userId}`, {
+        fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/${userId}`, {
             method: 'PUT',
             headers : { 
                 'Content-Type': 'application/json',

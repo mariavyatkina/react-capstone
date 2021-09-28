@@ -28,7 +28,7 @@ export default function SignIn(props: any) {
           const {token} = obj;
           console.log(`token = ${token}`)
           // verify the token
-          fetch('http://localhost:9999/api/account/verify?token=' + token,  {
+          fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/verify?token=` + token,  {
             method: 'POST',
             headers : { 
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export default function SignIn(props: any) {
 
         setIsLoading(true);
     
-        fetch('http://localhost:9999/api/account/signin', {
+        fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/api/account/signin`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -101,6 +101,7 @@ export default function SignIn(props: any) {
         }
         if(!token){
         return(
+          <div className="container-fluid maindiv">
           <div className="jumbotron login vertical-center horizontal-center col-5">
             {
             (signInError)?(
@@ -108,7 +109,7 @@ export default function SignIn(props: any) {
             )
             : null
           }
-          <div className="container p-6">
+          <div className="container p-6 login-container">
             <h3>Sign In</h3>
             <form className="form mt-2">
               <div className="form-group">
@@ -144,7 +145,8 @@ export default function SignIn(props: any) {
            <Link className="text-light" to="/">Back to Home</Link>
             </form>
           </div>
-            </div>
+          </div>
+           </div>
          )
         }
         return (
