@@ -33,7 +33,7 @@ mongoose.connect(db_url,connectionParams)
         console.error(`Error connecting to the database. \n${err}`);
     })
 
-const SERVER_PORT = process.env.SERVER_PORT;
+const PORT = process.env.PORT;
 
 console.log('starting express')
 const app = express();
@@ -73,6 +73,6 @@ app.use((req:any, res:any, next:any) => {
   
   });
   /** Start express server  */
-  app.listen(SERVER_PORT, () => {
-    console.log(`Example app listening at http://localhost:${SERVER_PORT}`)
+  app.listen(PORT, () => {
+    console.log(`Example app listening at http://localhost:${PORT}`)
   })
