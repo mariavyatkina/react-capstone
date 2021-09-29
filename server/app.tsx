@@ -1,6 +1,8 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+
 require('dotenv').config();
 
 const corsOptions ={
@@ -42,7 +44,7 @@ const app = express();
 
 // this allows us to parse HTTP POST request bodies 
 app.use(express.json());
-
+app.use(express.static(path.join(__dirname, 'client/build')))
 // For development - console each HTTP request to the server
 app.use((req:any, res:any, next:any) => {
     console.log(`${req.method} ${req.path} with param ${JSON.stringify(req.params)}`);
@@ -66,6 +68,10 @@ app.use((req:any, res:any, next:any) => {
   app.use('/', routes);
  
   app.use(cors(corsOptions)) 
+  app.get('*', (req:any, res:any) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  
+  });
   /** Start express server  */
   app.listen(SERVER_PORT, () => {
     console.log(`Example app listening at http://localhost:${SERVER_PORT}`)
