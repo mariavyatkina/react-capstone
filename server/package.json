@@ -28,7 +28,7 @@
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
-    "server": "nodemon app.js",
+    "start:dev": "nodemon app.js -q",
     "start": "node app.js"
   },
   "author": "",
