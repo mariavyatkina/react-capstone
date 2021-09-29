@@ -9,6 +9,7 @@ export default function BrowseMovies() {
     const [movieTitle, setMovieTitle] = useState("");
     const [movies, setMovies] = useState([]);
     const[isLoading, setIsLoading] = useState(false);
+    const[isSearched, setIsSearched] = useState(false);
 
     function onSearchBarChange(event: any) {
         setMovieTitle(event.target.value);
@@ -17,6 +18,7 @@ export default function BrowseMovies() {
 
     function toggleSearchMovies(){
         setIsLoading(true);
+        setIsSearched(true);
         Axios.get(`${process.env.REACT_APP_OMDB_URL}/?s=${movieTitle}&apikey=${process.env.REACT_APP_API_KEY}`)
         .then((response) =>{
         console.log(response.data);
@@ -46,7 +48,7 @@ export default function BrowseMovies() {
                     aria-describedby="search-addon" onChange={onSearchBarChange}/>
                 <button type="button" className="btn btn-outline-primary" onClick={toggleSearchMovies}>Search Movies</button>
              </div>  
-             <MovieList movies={movies}/>
+             <MovieList movies={movies} isSearched={isSearched}/>
             </div>
         </div>
     )
