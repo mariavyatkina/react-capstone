@@ -1,3 +1,4 @@
+var path = require('path');
 var express = require('express');
 var mongoose = require('mongoose');
 var cors = require('cors');
@@ -29,6 +30,7 @@ var app = express();
  **/
 // this allows us to parse HTTP POST request bodies 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'client/build')));
 // For development - console each HTTP request to the server
 app.use(function (req, res, next) {
     console.log(req.method + " " + req.path + " with param " + JSON.stringify(req.params));
@@ -48,6 +50,9 @@ app.get('/', function (req, res) {
 /** Mount all our various API routes here */
 app.use('/', routes);
 app.use(cors(corsOptions));
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 /** Start express server  */
 app.listen(SERVER_PORT, function () {
     console.log("Example app listening at http://localhost:" + SERVER_PORT);
