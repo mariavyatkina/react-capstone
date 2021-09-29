@@ -10,7 +10,10 @@ import {Link, Redirect} from 'react-router-dom'
 import AccountInfo from './AccountInfo';
 import '../styles/Account.css';
 import Axios from 'axios';
+import dotenv from 'dotenv';
 import SelectedMovieList from './SelectedMovieList';
+
+dotenv.config();
 
 export default function Account(props:any) {
     const[email, setEmail] = useState("");

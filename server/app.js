@@ -22,7 +22,7 @@ mongoose.connect(db_url, connectionParams)
 })["catch"](function (err) {
     console.error("Error connecting to the database. \n" + err);
 });
-var SERVER_PORT = process.env.SERVER_PORT;
+var PORT = process.env.PORT;
 console.log('starting express');
 var app = express();
 /**
@@ -54,6 +54,6 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 /** Start express server  */
-app.listen(SERVER_PORT, function () {
-    console.log("Example app listening at http://localhost:" + SERVER_PORT);
+app.listen(PORT, function () {
+    console.log("Example app listening at http://localhost:" + PORT);
 });

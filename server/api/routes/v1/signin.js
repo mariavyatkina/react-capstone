@@ -7,6 +7,9 @@ var cors1 = require("cors");
 //const API_ACCOUNT_PATH = process.env.API_ACCOUNT_PATH;
 //console.log(API_ACCOUNT_PATH);
 router.use(cors1());
+router.get('/status', function (req, res) {
+    return res.send("OK!");
+});
 //signup request
 router.post('/api/account/signup', function (req, res, next) {
     var body = req.body;
