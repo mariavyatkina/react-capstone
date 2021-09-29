@@ -22,6 +22,7 @@ export default function Account(props:any) {
     const [userId, setUserId] = useState("");
     const [token, setToken] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    
   
 
     useEffect(() => {

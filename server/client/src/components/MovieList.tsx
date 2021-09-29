@@ -11,7 +11,13 @@ export default function MovieList(props: any) {
 
         return(
             <div>
-            Search Results: 
+            <h5 className="text-light text-center p-3">
+                {
+                    (props.isSearched)?
+                    ("Search Results: "):
+                    ("Search results will be displayed here")
+                }
+            </h5>
             <div className="row movie-list">
                 {movieList}
             </div>

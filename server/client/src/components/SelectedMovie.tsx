@@ -24,11 +24,14 @@ export default function SelectedMovie(props:any) {
 
     return (
         <div className="col-3 selected-movie">
+            <div className="row">
                     <button className="btn btn-dark remove-button" onClick={toggleRemoveMovie}>
-                        Remove</button>
+                        Remove</button></div>
+                        <div className="row">    
                     <img 
                         src={props.movie.poster_url} 
                         alt="selected-movie"/>
+                    </div>
                     </div>
     )
 }
